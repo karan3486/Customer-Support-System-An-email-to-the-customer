@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Service Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <img src="https://media.istockphoto.com/id/1010001882/vector/%C3%B0%C3%B0%C2%B5%C3%B1%C3%B0%C3%B1%C3%B1.jpg?s=612x612&w=0&k=20&c=1jeAr9KSx3sG7SKxUPR_j8WPSZq_NIKL0P-MA4F1xRw=" alt="Chatbot Icon" class="chatbot-icon">
+            <h1>Customer Service Assistant</h1>
+        </div>
+        <form id="customer-form" method="POST" action="/submit">
+        <div class="chat-body">
+            <!-- Language selection -->
+            <div class="language-selector">
+                <label for="language">Language:</label>
+                <select id="language" name="language" form="customer-form">
+                    <option value="English" {% if language == "English" %}selected{% endif %}>English</option>
+                    <option value="Spanish" {% if language == "Spanish" %}selected{% endif %}>Spanish</option>
+                    <option value="Chinese" {% if language == "Chinese" %}selected{% endif %}>Chinese</option>
+                    <option value="French" {% if language == "French" %}selected{% endif %}>French</option>
+                    <option value="German" {% if language == "German" %}selected{% endif %}>German</option>
+                    <option value="Italian" {% if language == "Italian" %}selected{% endif %}>Italian</option>
+                    <option value="Portuguese" {% if language == "Portuguese" %}selected{% endif %}>Portuguese</option>
+                    <option value="Russian" {% if language == "Russian" %}selected{% endif %}>Russian</option>
+                    <option value="Japanese" {% if language == "Japanese" %}selected{% endif %}>Japanese</option>
+                    <option value="Korean" {% if language == "Korean" %}selected{% endif %}>Korean</option>
+                    <option value="Arabic" {% if language == "Arabic" %}selected{% endif %}>Arabic</option>
+                    <option value="Hindi" {% if language == "Hindi" %}selected{% endif %}>Hindi</option>
+                    <option value="Bengali" {% if language == "Bengali" %}selected{% endif %}>Bengali</option>
+                    <option value="Dutch" {% if language == "Dutch" %}selected{% endif %}>Dutch</option>
+                    <option value="Turkish" {% if language == "Turkish" %}selected{% endif %}>Turkish</option>
+                    <option value="Vietnamese" {% if language == "Vietnamese" %}selected{% endif %}>Vietnamese</option>
+                    <option value="Swedish" {% if language == "Swedish" %}selected{% endif %}>Swedish</option>
+                    <option value="Greek" {% if language == "Greek" %}selected{% endif %}>Greek</option>
+                    <option value="Hebrew" {% if language == "Hebrew" %}selected{% endif %}>Hebrew</option>
+                    <option value="Polish" {% if language == "Polish" %}selected{% endif %}>Polish</option>
+                    <option value="Danish" {% if language == "Danish" %}selected{% endif %}>Danish</option>
+                    <option value="Finnish" {% if language == "Finnish" %}selected{% endif %}>Finnish</option>
+                    <option value="Norwegian" {% if language == "Norwegian" %}selected{% endif %}>Norwegian</option>
+                    <option value="Indonesian" {% if language == "Indonesian" %}selected{% endif %}>Indonesian</option>
+                    <option value="Malay" {% if language == "Malay" %}selected{% endif %}>Malay</option>
+                    <option value="Romanian" {% if language == "Romanian" %}selected{% endif %}>Romanian</option>
+                    <option value="Czech" {% if language == "Czech" %}selected{% endif %}>Czech</option>
+                    <option value="Hungarian" {% if language == "Hungarian" %}selected{% endif %}>Hungarian</option>
+                    <option value="Ukrainian" {% if language == "Ukrainian" %}selected{% endif %}>Ukrainian</option>
+                    <option value="Thai" {% if language == "Thai" %}selected{% endif %}>Thai</option>
+                    <option value="Tamil" {% if language == "Tamil" %}selected{% endif %}>Tamil</option>
+                    <option value="Telugu" {% if language == "Telugu" %}selected{% endif %}>Telugu</option>
+                    <option value="Urdu" {% if language == "Urdu" %}selected{% endif %}>Urdu</option>
+                    <option value="Gujarati" {% if language == "Gujarati" %}selected{% endif %}>Gujarati</option>
+                    <option value="Punjabi" {% if language == "Punjabi" %}selected{% endif %}>Punjabi</option>
+                    <option value="Marathi" {% if language == "Marathi" %}selected{% endif %}>Marathi</option>
+                    <option value="Persian" {% if language == "Persian" %}selected{% endif %}>Persian</option>
+                    <option value="Swahili" {% if language == "Swahili" %}selected{% endif %}>Swahili</option>
+                    <option value="Filipino" {% if language == "Filipino" %}selected{% endif %}>Filipino</option>
+                </select>
+                
+            </div>
+            <div class="question-section">
+                <label for="question">Customer Email:</label>
+                <div class="text-box">
+                <input id="email"  for="email" type="email" name="email" value="{{email}}" placeholder="Enter your email here..."/>
+            </div>
+            </div>
+            
+            <!-- Question (Product Description) -->
+            <div class="question-section">
+                <label for="question">Customer Comments:</label>
+                <div class="text-box">
+                <textarea id="question"  for="question" name="question" rows="4" cols="50" placeholder="Enter the product comments here...">{{ question }}</textarea>
+            </div>
+            </div>
+            
+            <!-- Answer (Generated Email Response) -->
+            <div class="answer-section">
+                <label for="answer">Generated Email Response:</label>
+                <div class="text-box">
+                    <textarea id="answer" name="answer" rows="6" cols="50" readonly>{{ answer }}</textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-footer">
+            
+                <button type="submit" class="submit-btn">Generate Response</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

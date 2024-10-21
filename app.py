@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask_mail import Mail, Message
 from config import Config
 import random
-
+from helper import cot
 # Load environment variables from .env file
 load_dotenv()
 client = OpenAI()
@@ -34,9 +34,9 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     # product_description = request.form.get("question")
-    product_description = random.choice(list(products.values()))
     language = request.form.get("language")
     email = request.form.get("email")
+    product_description = random.choice(list(products.values()))
     #the headphones is good with bluetooth and wire connection
     
     # Generate customer comment based on product description
@@ -57,6 +57,77 @@ def submit():
             ]
     )
     customer_comment = response_comment.choices[0].message.content
+    response = client.moderations.create(
+    model="omni-moderation-latest",
+    input=customer_comment,
+    )
+
+    moderation_output = response["results"][0]
+    print(moderation_output)
+
+    delimiter = "####"
+    system_message = f"""
+    You will be provided with customer service queries. \
+    The customer service query will be delimited with \
+    {delimiter} characters.
+
+    Classify each query into a primary category \
+    and a secondary cate
+    Primary categories: Billing, Techgory. 
+
+    Provide your output in json format with the \
+    keys: primary and secondary.
+    nical Support, \
+    Account Management, or General Inquiry.
+
+    Billing secondary categories:
+    Unsubscribe or upgrade
+    Add a payment method
+    Explanation for charge
+    Dispute a charge
+
+    Technical Support secondary categories:
+    General troubleshooting
+    Device compatibility
+    Software updates
+
+    Account Management secondary categories:
+    Password reset
+    Update personal information
+    Close account
+    Account security
+
+    General Inquiry secondary categories:
+    Product information
+    Pricing
+    Feedback
+    Speak to a human
+
+    """
+    user_message = f"""\
+    I want you to delete my profile and all of my user data"""
+
+    # Combined messages to be sent to ChatGPT 
+    messages =  [  
+    {'role':'system', 
+    'content': system_message},    
+    {'role':'user', 
+    'content': f"{delimiter}{customer_comment}{delimiter}"},  
+    ] 
+
+    # Get response from ChatGPT 
+    response_classify = client.chat.completions.create(
+    model=model,
+    messages=messages
+    )
+    print(response_classify)
+    
+    #COT
+    response_cot = client.chat.completions.create(
+    model=model,
+    messages=cot.messages
+    )
+    print(response_cot)
 
     # Step 2: Generate email subject from customer comment
     # response_subject = client.chat.completions.create(
@@ -128,6 +199,14 @@ def submit():
             ],
     )
     customer_email = response_email.choices[0].message.content
+    check_response = client.moderations.create(
+    model="omni-moderation-latest",
+    input=customer_email,
+    )
+    print(check_response)
+
+    from helper import eval
+    print(eval.n_examples,eval.fraction_correct)
     # Send email to the customer
     msg = Message(email_subject, recipients=[email])
     msg.body = customer_email
@@ -135,6 +214,7 @@ def submit():
 
     # Render the results back to the UI
     return render_template("index.html", question=customer_comment, answer=customer_email, language=language, email=email)
+
 products = {
     "TechPro Ultrabook": {
         "name": "TechPro Ultrabook",
@@ -335,7 +415,6 @@ products = {
         "price": 699.99
     }
 }
-
 
 # Start the Flask application
 if __name__ == '__main__':
